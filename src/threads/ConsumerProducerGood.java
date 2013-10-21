@@ -41,7 +41,7 @@ class Buffer {
         private boolean empty = true;
         
         public synchronized void put (int i) throws InterruptedException { 
-            while (empty == false) {    //wait till the buffer becomes empty
+            while (!empty) {    //wait till the buffer becomes empty
                 try { wait(); }
                 catch (InterruptedException e) {throw e;}
             }
@@ -52,7 +52,7 @@ class Buffer {
         } 
         
         public synchronized int get () throws InterruptedException {
-            while (empty == true)  {    //wait till something appears in the buffer
+            while (empty)  {    //wait till something appears in the buffer
                 try {   wait(); }
                 catch (InterruptedException e) {throw e;}
             }

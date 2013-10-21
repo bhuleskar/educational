@@ -28,7 +28,7 @@ public class Deadlock {
             // Basically, we just want to give the other thread a chance to
             // run.  Threads and deadlock are asynchronous things, but we're
             // trying to force deadlock to happen here...
-            try { Thread.sleep(50); } catch (InterruptedException e) {}
+            //try { Thread.sleep(50); } catch (InterruptedException e) {}
             
             // Now wait 'till we can get a lock on resource 2
             synchronized(resource2) {
@@ -41,12 +41,14 @@ public class Deadlock {
       // Here's the second thread.  It tries to lock resource2 then resource1
       Thread t2 = new Thread() {
         public void run() {
+            // If you put a sleep for 100 sec it works.
+            //try { Thread.sleep(100); } catch (InterruptedException e) {}
           // This thread locks resource 2 right away
           synchronized(resource2) {
             System.out.println("Thread 2: locked resource 2");
 
             // Then it pauses, for the same reason as the first thread does
-            try { Thread.sleep(50); } catch (InterruptedException e) {}
+            //try { Thread.sleep(50); } catch (InterruptedException e) {}
 
             // Then it tries to lock resource1.  But wait!  Thread 1 locked
             // resource1, and won't release it 'till it gets a lock on

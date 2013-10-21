@@ -22,22 +22,23 @@ public class ProducerConsumer {
         ProducerConsumer rw = new ProducerConsumer();
         Thread[] producer = new Thread[10];
         Thread[] consumer = new Thread[10];
-        
-        for(int i=0;i<1;i++){
-            consumer[i] = new Thread(new Consumer(rw));
-            producer[i] = new Thread(new Producer(rw));
-            consumer[i].start();
+        consumer[0] = new Thread(new Consumer(rw), "Consumer ");
+        consumer[0].start();
+        for(int i=0;i<3;i++){
+            System.out.println("Starting Thread " + i);
+            producer[i] = new Thread(new Producer(rw), "Producer " + i);
+            
             producer[i].start();
         }
 
     }
 
     public void produce(int i) {
-        synchronized (lst) {
+        synchronized (this) {
             while (!lst.isEmpty()) {
                 try {
                    // System.out.println("Waiting in Producer , queue count:  " + lst.size() );
-                    lst.wait();
+                    wait();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -49,18 +50,19 @@ public class ProducerConsumer {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            System.out.println("Added element: " +i +" ->"+ lst.add(i));
+             lst.add(i);
+            System.out.println("Added element: " +i +" , Queue Count: " + lst.size() +" Current Thread =" +Thread.currentThread().getName());
  
-            lst.notify();
+            notifyAll();
         }
     }
 
     public void consume() {
-        synchronized (lst) {
+        synchronized (this) {
             while (lst.isEmpty()) {
                 try {
                    // System.out.println("Waiting in consumer , queue count : " + lst.size() );
-                    lst.wait();
+                   wait();
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -73,8 +75,8 @@ public class ProducerConsumer {
                 e.printStackTrace();
             }
             
-            System.out.println("Removed element: " +lst.remove() +" , Queue Count: " + lst.size());
-            lst.notify();
+            System.out.println("Removed element: " +lst.remove() +" , Queue Count: " + lst.size() +" Current Thread =" +Thread.currentThread().getName());
+            notifyAll();
         }
 
     }
@@ -89,7 +91,7 @@ class Producer implements Runnable {
     @Override
     public void run() {
         //while (true) {
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 4; i++) {
                 pc.produce(i);
             }
         //}
