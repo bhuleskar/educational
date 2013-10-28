@@ -1,5 +1,4 @@
 /*-
- * This computer program is the confidential information and proprietary trade
  * secret of Cisco Systems, Inc. Possessions and use of this program must
  * conform strictly to the license agreement between the user and Cisco Systems,
  * Inc., and receipt or possession does not convey any rights to divulge,
@@ -26,16 +25,16 @@ public class Tree {
         tree.insert(tree.getRoot(), 13);
         tree.insert(tree.getRoot(), 14);
         tree.insert(tree.getRoot(), 17);
-//        tree.insert(tree.getRoot(), 19);
-        //tree.insert(tree.getRoot(), 23);
+        tree.insert(tree.getRoot(), 19);
+        tree.insert(tree.getRoot(), 23);
         tree.insert(tree.getRoot(), 9);
         tree.insert(tree.getRoot(), 11);
 
         tree.inOrderTraversal(tree.getRoot());
 //        System.out.println("Number of Nodes: " + tree.size(tree.getRoot()));
        //System.out.println("Max Depth: " + tree.maxDepth(tree.getRoot()));
-       //System.out.println("Is Tree Balanced: " + tree.isTreeBalanced(tree.getRoot()));
-       System.out.println("IS BST" + tree.isBST2(tree.getRoot(),Integer.MIN_VALUE, Integer.MAX_VALUE));
+       System.out.println("Is Tree Balanced: " + tree.isTreeBalanced(tree.getRoot()));
+    //   System.out.println("IS BST" + tree.isBST2(tree.getRoot(),Integer.MIN_VALUE, Integer.MAX_VALUE));
 //        System.out.println("Printing leaf nodes..");
 //        tree.printLeafNode(tree.getRoot());
 
@@ -92,7 +91,7 @@ public class Tree {
     
     public boolean isTreeBalanced(Node node){
         if (node == null) {
-            return false;
+            return true;
         }
         int lDepth = maxDepth(node.leftPtr);
         int rDepth = maxDepth(node.rightPtr);
@@ -101,7 +100,7 @@ public class Tree {
         if(Math.abs(lDepth - rDepth) >1){
             return false;
         }
-        return true;
+        return isTreeBalanced(node.leftPtr) && isTreeBalanced(node.rightPtr);
     }
 
     public void inOrderTraversal(Node node) {

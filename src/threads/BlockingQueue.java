@@ -17,7 +17,7 @@ import java.util.List;
 
 public class BlockingQueue {
 
-    private List queue = new LinkedList();
+    private List<Object> queue = new LinkedList<Object>();
     private int limit = 10;
 
     public BlockingQueue(int limit) {
@@ -30,7 +30,7 @@ public class BlockingQueue {
             wait();
         }
 
-        //You are mentioning that things are added to the queue and get ready to consume it (all waiting threads)
+        //You are mentioning that things are added to the queue and get ready to consume it (all waiting consuming threads)
 
         if (this.queue.size() == 0) {
             notifyAll();
@@ -43,7 +43,7 @@ public class BlockingQueue {
         while (this.queue.size() == 0) {
             wait();
         }
-        //You are mentioning that things are being removed from the queue and get ready to produce it (all waiting threads)
+        //You are mentioning that things are being removed from the queue and get ready to produce it (all waiting producing threads)
         if (this.queue.size() == this.limit) {
             notifyAll();
         }
