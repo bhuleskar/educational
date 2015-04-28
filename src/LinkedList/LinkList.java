@@ -132,9 +132,9 @@ import java.util.List;
 
 class Node {
 	Node next = null;
-	int data;
+	Object data;
 
-	public Node(int d) {
+	public Node(Object d) {
 		data = d;
 	}
 }
@@ -158,9 +158,9 @@ public class LinkList {
         theList.insertFirst(5);
         theList.insertFirst(3);
         //theList.reverseList();
-        theList.deleteDuplicate();
+       // theList.deleteDuplicate();
         //theList.deleteIndex(theList.first, 3);
-        //theList.deleteNode(theList.first, 3);
+        theList.deleteNode(theList.first, 3);
         Node current = theList.first;
         while (current != null) {
             // Node aLink = theList.deleteFirst();
@@ -207,7 +207,7 @@ public class LinkList {
 		current.next=newInsert;
 	}
 	
-	public void insertFirst(int id) {
+	public void insertFirst(Integer id) {
 		Node newLink = new Node(id);
 		newLink.next = first;
 		first = newLink;
@@ -219,14 +219,14 @@ public class LinkList {
 		return temp;
 	}
 	
-	public void deleteNode(Node head, int d) {
+	public void deleteNode(Node head, Integer d) {
 		Node n = first;
-		while (first.data == d) {
+		while (((Integer)first.data).intValue() == d) {
 			first= first.next; /* moved head */
 		}
 		
 		while (n.next != null) {
-			if (n.next.data == d) {
+			if (((Integer)n.next.data).intValue() == d) {
 				n.next = n.next.next;
 				//return head; /* head didn’t change */
 			}else
