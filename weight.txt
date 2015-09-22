@@ -1,0 +1,13 @@
+undirected
+5
+a
+b
+c
+d
+e
+a b 10
+a e 1
+b d 3
+b c 5
+c d 2
+a d 6
