@@ -1,4 +1,4 @@
-package graph;
+package graph.generic;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
