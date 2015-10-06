@@ -1,4 +1,4 @@
-package threads.prod;
+/*package threads.prod;
 ///*-
 // * This computer program is the confidential information and proprietary trade
 // * secret of Cisco Systems, Inc. Possessions and use of this program must
@@ -10,7 +10,7 @@ package threads.prod;
 // * Copyright 2011-2013 Cisco Systems, Inc. All rights reserved.
 // * 
 // * Created on Sep 26, 2013
-// */
+// 
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -112,3 +112,4 @@ class Consumer implements Runnable {
         }
     }
 }
+*/

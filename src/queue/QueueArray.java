@@ -23,7 +23,7 @@ package queue;
 	public int deque(){
 	    
 		if(index==-1){
-			throw new UnderflowException( "No elements in queue" );
+		//	throw new UnderflowException( "No elements in queue" );
 		}
 		index--;
 		int a =top[front];
@@ -37,18 +37,20 @@ package queue;
     }
 }
  
-class UnderflowException extends RuntimeException {
-	    /**
+/*class UnderflowException extends RuntimeException {
+	    *//**
+	 * 
+	 *//*
+	private static final long serialVersionUID = 1L;
+
+		*//**
 	     * Construct this exception object.
 	     * @param message the error message.
-	     */
+	     *//*
 	    public UnderflowException( String message ) {
 	        super( message );
 	    }
-	}
-
-
-
+	}*/
  
  public class QueueArray{
 	 public static void main(String[] args){
