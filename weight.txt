@@ -5,9 +5,9 @@ b
 c
 d
 e
-a b 10
-a e 1
-b d 3
-b c 5
-c d 2
-a d 6
+a b wt:10.3
+a e wt:1.2
+b d wt:3
+b c wt:5
+c d wt:2
+a d wt:6

@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
  
 /**
  * This uses a custom link list kind of structure. More of class Node{ } kind.
@@ -17,70 +18,77 @@ import java.util.Stack;
   
 /*- Adjacency list Representation.
 * Custom Array [] - > Custom LinkedList.
-*  ----       __________     ___________
-*  !   ! ->   !__!__!___! -> !__!__!___!
+*  ----         __________       ______________
+*  ! A  ! ->   !_B_!__!___! -> !_C_!__!_NULL_!
 *  ----
 *
 */
 
 public class CustomGraphLinkedList {
-	boolean directed;
-    CustomVertex[] adjLists;
-	String file;
-     
-    public CustomGraphLinkedList(String file) throws FileNotFoundException {
-    	this.file = file;
-    	readGraphInputFile();
-    }
-     
+	private boolean undirected = true;
+	private CustomVertex[] adjLists;
+	private String file;
+	private static String DIRECTED = "directed";
+
+	public CustomGraphLinkedList(String file) throws FileNotFoundException {
+		this.file = file;
+		readGraphInputFile();
+	}
+
 	private void readGraphInputFile() throws FileNotFoundException {
 		Scanner sc = new Scanner(new File(file));
-
 		String graphType = sc.next();
-		boolean undirected = true;
-		if (graphType.equals("directed")) {
+		if (graphType.equals(DIRECTED)) {
 			undirected = false;
 		}
-
 		adjLists = new CustomVertex[sc.nextInt()];
-
 		/* read vertices. */
 		for (int v = 0; v < adjLists.length; v++) {
-			adjLists[v] = new CustomVertex(sc.next(), null,v);
+			adjLists[v] = new CustomVertex(sc.next(), null, v);
 		}
+		readEdges(sc);
+		if (sc != null) {
+			sc.close();
+		}
+	}
 
-		/* read edges. */
+	/**
+	 * Read edges from the Adjacency List.
+	 * 
+	 * Because the order doesn't matter, we add it to the front of the list.
+	 * This saves us traversing through linkedList. add v2 to front of v1's
+	 * adjacency list and add v1 to front of v2's adjacency list
+	 * 
+	 * @param sc
+	 */
+	private void readEdges(Scanner sc) {
 		while (sc.hasNext()) {
-
-			// read vertex names and translate to vertex numbers
 			int vertex1 = indexForName(sc.next());
 			int vertex2 = -1;
 			if (sc.hasNext()) {
 				vertex2 = indexForName(sc.next());
 			}
-			int weight = 0;
-			if (sc.hasNextInt()) {
-				weight = sc.nextInt();
+			double weight = 0;
+			Pattern p = Pattern.compile("wt:((\\d+(\\.)*\\d*))");
+			if (sc.hasNext(p)) {
+				String next = sc.next(p);
+				Matcher weightPtn = p.matcher(next);
+				if (weightPtn.find()) {
+					weight = Double.parseDouble(weightPtn.group(1));
+				}
 			}
-			/*
-			 * Because order doesn't matter, we are addding to the front of the
-			 * list. This saves us traversing through linkedList. add v2 to
-			 * front of v1's adjacency list and add v1 to front of v2's
-			 * adjacency list
-			 */
 			if (vertex2 != -1) {
-				adjLists[vertex1].neighbor = new Neighbor(vertex2, adjLists[vertex1].getNeighbor(), weight);
+				adjLists[vertex1].addNeighbor(new Neighbor(vertex2, adjLists[vertex1].getNeighbor(), weight));
 			}
-			if (undirected && vertex2!=-1) {
-				adjLists[vertex2].neighbor = new Neighbor(vertex1, adjLists[vertex2].getNeighbor(), weight);
+			if (undirected && vertex2 != -1) {
+				adjLists[vertex2].addNeighbor(new Neighbor(vertex1, adjLists[vertex2].getNeighbor(), weight));
 			}
 		}
-		if (sc != null) {
-			sc.close();
-		}
-
 	}
 
+	/**
+	 * Read vertex names and translate to vertex numbers
+	 */
 	private int indexForName(String name) {
 		for (int v = 0; v < adjLists.length; v++) {
 			if (adjLists[v].getName().equals(name)) {
@@ -89,13 +97,14 @@ public class CustomGraphLinkedList {
 		}
 		return -1;
 	}
-     
+
 	/**
 	 * Print the graph.
 	 */
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append("\n");
+		CustomVertex[] adjLists = getAdjacenyList();
+		s.append("Adjacency List of the Graph: \n\n");
 		for (int v = 0; v < adjLists.length; v++) {
 			s.append("|");
 			s.append(adjLists[v].getName());
@@ -111,38 +120,43 @@ public class CustomGraphLinkedList {
 		}
 		return s.toString();
 	}
-     
-    /**
-     * @param args
-     * @throws IOException 
-     */
-    public static void main(String[] args) 
-    throws IOException {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter graph input file name: ");
-        String file = sc.nextLine();
-        CustomGraphLinkedList graph = new CustomGraphLinkedList(file);
-        System.out.println(graph);
-        graph.dfs();
-        sc.close();
-    }
 
-	private void dfs() {
-		Stack<CustomVertex> s = new Stack<CustomVertex>();
-		s.push(adjLists[0]);
-		while (!s.isEmpty()) {
-			CustomVertex v = s.pop();
-			if (!v.getIsVisited()) {
-				System.out.println(v.name);
-				v.setIsVisited(true);
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Enter graph input file name: ");
+		String file = sc.nextLine();
+		CustomGraphLinkedList graph = new CustomGraphLinkedList(file);
+		System.out.println(graph);
+		System.out.println("DFS Recursive \n");
+		CustomGraphHelperMethods.recursiveDfs(graph.adjLists[0], graph.getAdjacenyList());
+		System.out.println("\n BFS \n");
+		graph.resetVisitedFlag();
+		CustomGraphHelperMethods.bfs(graph.getAdjacenyList());
+		System.out.println(" \n DFS stack \n");
+		graph.resetVisitedFlag();
+		CustomGraphHelperMethods.dfs(graph.getAdjacenyList());
+		sc.close();
+	}
 
-			}
-			for (Neighbor nbr = v.neighbor; nbr != null; nbr = nbr.next) {
-				if (!(adjLists[nbr.vertexNum]).getIsVisited()) {
-					s.push(adjLists[nbr.vertexNum]);
-				}
-			}
+	/**
+	 * TODO: Need to find a better solution.
+	 */
+	private void resetVisitedFlag() {
+		for (CustomVertex v : adjLists) {
+			v.setIsVisited(false);
 		}
 	}
- 
+
+	/**
+	 * Getter for Adjacency list.
+	 * 
+	 * @return Adjacency List.
+	 */
+	public CustomVertex[] getAdjacenyList() {
+		return adjLists;
+	}
 }

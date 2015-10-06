@@ -11,6 +11,10 @@ class CustomVertex {
 		this.neighbor = neighbors;
 		this.vertexNum = vertexNum;
 	}
+	
+	public void addNeighbor(Neighbor neighbor){
+		this.neighbor = neighbor;
+	}
 
 	public void setIsVisited(boolean isVisited) {
 		this.isVisited = isVisited;
