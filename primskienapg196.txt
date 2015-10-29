@@ -1,0 +1,22 @@
+undirected
+7
+a
+b
+c
+d
+e
+f
+g
+a b wt:5
+a f wt:12
+a g wt:7
+b c wt:7
+b g wt:9
+c d wt:5
+c e wt:2
+c g wt:4
+d e wt:2
+e f wt:12
+e g wt:3
+f g wt:4
+

@@ -22,5 +22,9 @@ public class Neighbor {
 	public int getVertexnum(){
 		return vertexNum;
 	}
+	
+	public Neighbor getNext(){
+		return next;
+	}
 }
  

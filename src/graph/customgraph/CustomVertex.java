@@ -1,6 +1,6 @@
 package graph.customgraph;
 
-class CustomVertex {
+public class CustomVertex {
 	String name;
 	Neighbor neighbor;
 	boolean isVisited;

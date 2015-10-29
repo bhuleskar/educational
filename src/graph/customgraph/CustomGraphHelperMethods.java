@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import graph.customgraph.graphalgos.Prims;
+
 public class CustomGraphHelperMethods {
+	
+	private static Stack stck= new Stack();
 		
 	public static void bfs(CustomVertex[] adjLists) {
 		List<CustomVertex> lst = new ArrayList<CustomVertex>();
@@ -22,6 +26,13 @@ public class CustomGraphHelperMethods {
 					parent[nbr.getVertexnum()] = vertex.getVertexNum();
 					lst.add(adjLists[nbr.getVertexnum()]);
 				}
+			}
+		}
+		
+		for(CustomVertex c : adjLists){
+			if(!c.getIsVisited()){
+				System.out.println(c.getName());
+				c.setIsVisited(true);
 			}
 		}
 		int i=0;
@@ -51,6 +62,20 @@ public class CustomGraphHelperMethods {
 				}
 			}
 		}
+		
+		/**
+		 * For connected directed graphs, sometime there could be a scenario
+		 * wherein the node might not have been discovered by other nodes, in
+		 * that case we check if all of the nodes have been discovered and
+		 * processed.
+		 */
+		for(CustomVertex c : adjLists){
+			if(!c.getIsVisited()){
+				System.out.println(c.getName());
+				c.setIsVisited(true);
+			}
+		}
+		
 		int i = 0;
 		for (int a : parent) {
 			System.out.println("DFS Parent of " + adjLists[i].getName() + " =" + a);
@@ -69,6 +94,77 @@ public class CustomGraphHelperMethods {
 		for (Neighbor nbr = v.neighbor; nbr != null; nbr = nbr.next) {
 			if (!adjLists[nbr.getVertexnum()].isVisited) {
 				recursiveDfs(adjLists[nbr.getVertexnum()], adjLists);
+			}
+		}
+		
+		for(CustomVertex c : adjLists){
+			if(!c.getIsVisited()){
+				System.out.println(c.getName());
+				c.setIsVisited(true);
+			}
+		}
+	}
+	
+	/**
+	 * Topological Sort via DFS.
+	 * @param v
+	 * @param adjLists
+	 */
+	public static void topologicalSortDfs(CustomVertex v, CustomVertex[] adjLists) {
+		if (v == null ) {
+			return;
+		}
+		v.setIsVisited(true);
+		for (Neighbor nbr = v.neighbor; nbr != null; nbr = nbr.next) {
+			if (!adjLists[nbr.getVertexnum()].isVisited) {
+				topologicalSortDfs(adjLists[nbr.getVertexnum()], adjLists);
+			}
+		}
+		stck.push(v.getName());
+	}
+	
+	//TODO: Print the missing one comparing with others. Wil be usually one.
+	public static void printTopoSortDFS(){
+		while (!stck.isEmpty()){
+			System.out.println(stck.pop());
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param adjLists
+	 */
+	public static void topologicalSortArray(CustomVertex[] adjLists) {
+		int[] indegreeArray = new int[adjLists.length];
+		Stack<CustomVertex> s = new Stack<CustomVertex>();
+		for (int i = 0; i < indegreeArray.length; i++) {
+			indegreeArray[i] = 0;
+		}
+
+		for (CustomVertex v : adjLists) {
+			for (Neighbor nbr = v.neighbor; nbr != null; nbr = nbr.next) {
+				indegreeArray[nbr.getVertexnum()]++;
+			}
+		}
+
+		for (int i = 0; i < indegreeArray.length; i++) {
+			CustomVertex v = null;
+			if (indegreeArray[i] == 0) {
+				v = indexToVertex(i, adjLists);
+				s.push(v);
+			}
+		}
+
+		while (!s.isEmpty()) {
+			CustomVertex v = s.pop();
+			System.out.println(v.getName());
+			for (Neighbor nbr = v.neighbor; nbr != null; nbr = nbr.next) {
+				indegreeArray[nbr.getVertexnum()]--;
+				if (indegreeArray[nbr.getVertexnum()] == 0) {
+					v = indexToVertex(nbr.getVertexnum(), adjLists);
+					s.push(v);
+				}
 			}
 		}
 	}
@@ -101,5 +197,33 @@ public class CustomGraphHelperMethods {
 			findPath(start, parents[end], parents);
 			System.out.println(end);
 		}
+	}
+	
+	/**
+	 * Read vertex names and translate to vertex numbers
+	 */
+	public static int indexForName(String name, CustomVertex[] adjLists) {
+		for (int v = 0; v < adjLists.length; v++) {
+			if (adjLists[v].getName().equals(name)) {
+				return v;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Read vertex names and translate to vertex numbers
+	 */
+	public static CustomVertex indexToVertex(int num, CustomVertex[] adjLists) {
+		for (int v = 0; v < adjLists.length; v++) {
+			if (adjLists[v].getVertexNum() == num) {
+				return adjLists[v];
+			}
+		}
+		return null;
+	}
+	
+	public static void PrimsAlgo(CustomVertex[] adjLists){
+		Prims prim = new Prims(adjLists);
 	}
 }

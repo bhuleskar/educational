@@ -1,0 +1,28 @@
+undirected
+9
+a
+b
+c
+d
+e
+f
+g
+h
+i
+a b wt:100
+a g wt:50
+a h wt:51
+a f wt:105
+b c wt:101
+c h wt:46
+c d wt:44
+d e wt:60
+d i wt:40
+d h wt:70
+e f wt:40
+e i wt:45
+e g wt:50
+f g wt:60
+g h wt:40
+g i wt:40
+h i wt:41

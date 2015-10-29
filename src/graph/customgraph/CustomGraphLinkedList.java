@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
  * Use this class for weighted graph. This is very similar to the one in generic
  * package but is more customized to suit weighted graph.
  * 
+ * Note: The graph is assumed to be connected
+ * 
  * @author sridhar
  * 
  */
@@ -63,10 +65,10 @@ public class CustomGraphLinkedList {
 	 */
 	private void readEdges(Scanner sc) {
 		while (sc.hasNext()) {
-			int vertex1 = indexForName(sc.next());
+			int vertex1 = CustomGraphHelperMethods.indexForName(sc.next(),adjLists);
 			int vertex2 = -1;
 			if (sc.hasNext()) {
-				vertex2 = indexForName(sc.next());
+				vertex2 = CustomGraphHelperMethods.indexForName(sc.next(),adjLists);
 			}
 			double weight = 0;
 			Pattern p = Pattern.compile("wt:((\\d+(\\.)*\\d*))");
@@ -84,18 +86,6 @@ public class CustomGraphLinkedList {
 				adjLists[vertex2].addNeighbor(new Neighbor(vertex1, adjLists[vertex2].getNeighbor(), weight));
 			}
 		}
-	}
-
-	/**
-	 * Read vertex names and translate to vertex numbers
-	 */
-	private int indexForName(String name) {
-		for (int v = 0; v < adjLists.length; v++) {
-			if (adjLists[v].getName().equals(name)) {
-				return v;
-			}
-		}
-		return -1;
 	}
 
 	/**
@@ -131,7 +121,14 @@ public class CustomGraphLinkedList {
 		String file = sc.nextLine();
 		CustomGraphLinkedList graph = new CustomGraphLinkedList(file);
 		System.out.println(graph);
-		System.out.println("DFS Recursive \n");
+		System.out.println("Topological Sort via DFS \n");
+		CustomGraphHelperMethods.topologicalSortDfs(graph.adjLists[0], graph.getAdjacenyList());
+		CustomGraphHelperMethods.printTopoSortDFS();
+		graph.resetVisitedFlag();
+		System.out.println("Topological Sort via Array \n");
+		CustomGraphHelperMethods.topologicalSortArray(graph.getAdjacenyList());
+		graph.resetVisitedFlag();
+		System.out.println("\n DFS Recursive \n");
 		CustomGraphHelperMethods.recursiveDfs(graph.adjLists[0], graph.getAdjacenyList());
 		System.out.println("\n BFS \n");
 		graph.resetVisitedFlag();
@@ -139,6 +136,10 @@ public class CustomGraphLinkedList {
 		System.out.println(" \n DFS stack \n");
 		graph.resetVisitedFlag();
 		CustomGraphHelperMethods.dfs(graph.getAdjacenyList());
+		graph.resetVisitedFlag();
+		System.out.println(" \n Prim's Algo \n");
+		graph.resetVisitedFlag();
+		CustomGraphHelperMethods.PrimsAlgo(graph.getAdjacenyList());
 		sc.close();
 	}
 
