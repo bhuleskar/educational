@@ -25,5 +25,5 @@ public class CountingSemaphore {
       this.signals--;
     }
 
-    Semaphore s = new Semaphore();
+    SemaphoreEx s = new SemaphoreEx();
   }

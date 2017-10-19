@@ -10,12 +10,12 @@
  * 
  * Created on Sep 28, 2013
  */
-package threads.semaphore;
+package threads;
 
-public class Semaphore {
+public class SemaphoreEx {
     
     public static void main(String[] args){
-        Semaphore semaphore = new Semaphore();
+        SemaphoreEx semaphore = new SemaphoreEx();
 
         SendingThread sender = new SendingThread(semaphore);
 
@@ -40,9 +40,9 @@ public class Semaphore {
 
 
  class SendingThread  extends Thread{
-    Semaphore semaphore = null;
+    SemaphoreEx semaphore = null;
 
-    public SendingThread(Semaphore semaphore){
+    public SendingThread(SemaphoreEx semaphore){
       this.semaphore = semaphore;
     }
 
@@ -56,9 +56,9 @@ public class Semaphore {
   }
 
  class ReceivingThread extends Thread{
-    Semaphore semaphore = null;
+    SemaphoreEx semaphore = null;
 
-    public ReceivingThread(Semaphore semaphore){
+    public ReceivingThread(SemaphoreEx semaphore){
       this.semaphore = semaphore;
     }
 
